@@ -28,7 +28,7 @@ jobs:
         id: next_version
         run: |
           chmod +x ./scripts/next-docker-version.sh
-          VERSION=$(./scripts/next-docker-version.sh "${{ secrets.DOCKERHUB_USERNAME }}" hushkey-backend)
+          VERSION=$(./scripts/next-docker-version.sh "${{ secrets.DOCKERHUB_USERNAME }}" hushkeyapi)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Build and push Docker image
