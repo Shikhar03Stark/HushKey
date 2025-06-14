@@ -25,7 +25,7 @@ namespace HushKeyApi.Controllers
         }
 
         // GET api/secrets/symmetric/<secretId>
-        [HttpGet("symmetric/{secretId}")]
+        [HttpGet("public/{secretId}")]
         public async Task<IActionResult> GetSymmetricEncryptedText(string secretId)
         {
             try
@@ -46,7 +46,7 @@ namespace HushKeyApi.Controllers
         }
 
         // POST api/secrets/symmetric
-        [HttpPost("symmetric")]
+        [HttpPost("public")]
         public async Task<IActionResult> CreateSymmetricEncryptedSecret([FromBody] SecretRequest secretRequest)
         {
             try
@@ -60,7 +60,8 @@ namespace HushKeyApi.Controllers
                 var secret = await _secretService.GenerateSymmetricEncryptSecretAsync(secretText);
                 var response = new SecretResponse()
                 {
-                    ShareableLink = GetShareableLink(ExtractHostFromRequest(HttpContext), secret),
+                    UILink = GetShareableLink(ExtractHostFromRequest(HttpContext), secret, true),
+                    ServiceShareableLink = GetShareableLink(ExtractHostFromRequest(HttpContext), secret),
                     ExpiresAt = secretRequest.TTL.HasValue ? DateTime.UtcNow.AddSeconds(secretRequest.TTL.Value) : null
                 };
                 _logger.Info($"Symmetric encrypted secret created with ID {secret.EncryptedSecretId}.");
@@ -73,7 +74,7 @@ namespace HushKeyApi.Controllers
             }
         }
 
-        private Uri GetShareableLink(string host, SecretModel secretModel)
+        private Uri GetShareableLink(string host, SecretModel secretModel, bool isUI = false)
         {
             var uriBuilder = new UriBuilder();
             uriBuilder.Scheme = "https";
@@ -82,7 +83,14 @@ namespace HushKeyApi.Controllers
             {
                 uriBuilder.Port = int.Parse(host.Split(":")[1]);
             }
-            uriBuilder.Path = $"/api/secrets/symmetric/{secretModel.EncryptedSecretId}";
+            if (isUI)
+            {
+                uriBuilder.Path = $"/secrets/public/{secretModel.EncryptedSecretId}";
+            }
+            else
+            {
+                uriBuilder.Path = $"/api/secrets/public/{secretModel.EncryptedSecretId}";
+            }
             uriBuilder.Fragment = secretModel.Key;
             return uriBuilder.Uri;
         }
