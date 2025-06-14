@@ -30,6 +30,7 @@ jobs:
           chmod +x ./scripts/next-docker-version.sh
           VERSION=$(./scripts/next-docker-version.sh "${{ secrets.DOCKERHUB_USERNAME }}" hushkeyapi)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Creating tag with semver $VERSION"
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -38,5 +39,4 @@ jobs:
           file: ./backend/Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/hushkey-backend:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/hushkey-backend:${{ steps.next_version.outputs.version }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/hushkeyapi:${{ steps.next_version.outputs.version }}
