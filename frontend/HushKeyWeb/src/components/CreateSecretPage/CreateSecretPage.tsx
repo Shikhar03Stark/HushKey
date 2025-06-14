@@ -99,8 +99,8 @@ export default function CreateSecretPage() {
 			showToast('Secret submitted successfully!', 'success');
 			setSubmitted(true);
 
-		} catch (error) {
-			showToast('Failed to submit secret.', 'error');
+		} catch (error: any) {
+			showToast(`Failed to submit secret.${error.message ? `Error: ${error.message}` : ''}`, 'error');
 		}
 	};
 
