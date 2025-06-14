@@ -1,0 +1,42 @@
+# This workflow builds and publishes the backend Docker image after backend.yml passes
+name: Backend Docker Build & Publish
+
+on:
+  workflow_run:
+    workflows: ["Backend CI"]
+    types:
+      - completed
+
+jobs:
+  build-and-publish:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Get next Docker image version
+        id: next_version
+        run: |
+          chmod +x ./scripts/next-docker-version.sh
+          VERSION=$(./scripts/next-docker-version.sh "${{ secrets.DOCKERHUB_USERNAME }}" hushkey-backend)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/hushkey-backend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/hushkey-backend:${{ steps.next_version.outputs.version }}
