@@ -1,0 +1,12 @@
+// src/constants.ts
+// Centralized API endpoint constants for HushKey frontend
+
+export const API_BASE_URL = "https://localhost:5001/api";
+
+export const MAX_SECRET_LENGTH = 512;
+
+export const API_ENDPOINTS = {
+  createSecret: () => `${API_BASE_URL}/secrets/public`,
+  getSecret: (secretId: string) => `${API_BASE_URL}/secrets/public/${secretId}`,
+  // Add more endpoints as needed, always as functions
+};
