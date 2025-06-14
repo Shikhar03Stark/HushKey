@@ -1,5 +1,7 @@
 # HushKey Web
 
+[![Backend CI](https://github.com/Shikhar03Stark/HushKey/actions/workflows/backend.yml/badge.svg)](https://github.com/Shikhar03Stark/HushKey/actions/workflows/backend.yml) [![Frontend CI](https://github.com/Shikhar03Stark/HushKey/actions/workflows/frontend.yml/badge.svg)](https://github.com/Shikhar03Stark/HushKey/actions/workflows/frontend.yml)
+
 **HushKey** is a secure, privacy-first platform for sharing secrets using modern cryptography and a zero-knowledge approach. All encryption and decryption happen in your browser—**the server never sees or stores your secret keys**.
 
 ---
