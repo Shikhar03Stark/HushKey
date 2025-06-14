@@ -51,6 +51,6 @@ Feel free to open an [issue](https://github.com/Shikhar03Stark/HushKey/issues) o
 
 ## 📄 License
 
-This project is [MIT licensed](https://github.com/Shikhar03Stark/HushKey/blob/master/LICENSE).
+This project is [GNU GPLv3 licensed](https://github.com/Shikhar03Stark/HushKey/blob/master/LICENSE).
 
 ---
