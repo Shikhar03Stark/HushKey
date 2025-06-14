@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function Toast({ message, type, onClose }: { message: string; type: 'success' | 'error'; onClose: () => void }) {
   return (
     <div className={`fixed top-6 right-6 z-99 px-6 py-3 rounded shadow-lg text-white transition-all
