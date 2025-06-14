@@ -1,19 +1,5 @@
 import { useEffect, useState } from 'react';
-
-function markdownToHtml(md: string): string {
-  // Simple markdown to HTML (headings, lists, code, links, paragraphs)
-  return md
-    .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-    .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-    .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-    .replace(/^- (.*$)/gim, '<li>$1</li>')
-    .replace(/\n<li>/gim, '<ul><li>')
-    .replace(/<li>(.*?)<\/li>/gim, '<li>$1</li>')
-    .replace(/<li>(.*?)<\/li>(?!<li>)/gim, '$&</ul>')
-    .replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
-    .replace(/```[\s\S]*?```/gim, match => `<pre>${match.replace(/```/g, '')}</pre>`)
-    .replace(/\n/g, '<br/>');
-}
+import ReactMarkdown from 'react-markdown';
 
 function App() {
   const [readme, setReadme] = useState<string | null>(null);
@@ -26,10 +12,35 @@ function App() {
   }, []);
 
   return (
-    <div className="prose prose-invert max-w-3xl mx-auto py-14 px-6 bg-gray-950 rounded-2xl shadow-2xl border border-blue-900/40 mt-10">
+    <div className="prose prose-invert max-w-4xl mx-auto py-16 px-8 bg-gray-950 rounded-3xl shadow-2xl border border-blue-900/40 mt-14">
       {readme ? (
-        <div className="font-sans text-lg leading-relaxed tracking-wide text-blue-100">
-          <div dangerouslySetInnerHTML={{ __html: markdownToHtml(readme) }} />
+        <div className="font-sans text-[1.15rem] leading-relaxed tracking-wide text-blue-100">
+          <div className="mb-8 p-4 rounded-xl bg-blue-900/40 border border-blue-800 text-blue-200 text-base italic flex items-center gap-2">
+            <svg width="20" height="20" fill="currentColor" className="text-blue-400 flex-shrink-0" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 12H9v-2h2v2zm0-4H9V6h2v4z"/></svg>
+            <span>
+              <b>Disclaimer:</b> The content below is fetched live from the project's GitHub repository README. For the latest version, visit
+              {' '}<a href="https://github.com/Shikhar03Stark/HushKey/blob/master/README.md" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-400">GitHub README</a>.
+            </span>
+          </div>
+          <ReactMarkdown
+            components={{
+              h1: ({node, ...props}) => <h1 className="text-4xl font-extrabold text-blue-300 mb-6 mt-10 drop-shadow-lg" {...props} />,
+              h2: ({node, ...props}) => <h2 className="text-2xl font-bold text-blue-200 mt-8 mb-4" {...props} />,
+              h3: ({node, ...props}) => <h3 className="text-xl font-semibold text-blue-200 mt-6 mb-3" {...props} />,
+              p: ({node, ...props}) => <p className="mb-5 text-blue-100 text-lg" {...props} />,
+              ul: ({node, ...props}) => <ul className="mb-6 space-y-2 pl-7 list-disc text-blue-200" {...props} />,
+              li: ({node, ...props}) => <li className="text-blue-100 text-base" {...props} />,
+              a: ({node, ...props}) => <a className="underline hover:text-blue-400 transition-colors" target="_blank" rel="noopener noreferrer" {...props} />,
+              code: ({node, ...props}) => <code className="bg-blue-900/60 px-1.5 py-0.5 rounded text-blue-300 font-mono text-base" {...props} />,
+              pre: ({node, ...props}) => <pre className="bg-blue-950/80 border border-blue-800 rounded-xl p-4 my-4 overflow-x-auto text-blue-200" {...props} />,
+              blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-blue-500 pl-4 italic text-blue-300 my-4" {...props} />,
+              table: ({node, ...props}) => <table className="min-w-full my-4 border border-blue-800" {...props} />,
+              th: ({node, ...props}) => <th className="border border-blue-800 px-3 py-2 bg-blue-900/40" {...props} />,
+              td: ({node, ...props}) => <td className="border border-blue-800 px-3 py-2" {...props} />,
+            }}
+          >
+            {readme}
+          </ReactMarkdown>
         </div>
       ) : (
         <div className="font-sans text-lg leading-relaxed tracking-wide text-blue-100">
