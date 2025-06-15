@@ -5,23 +5,22 @@
 
 set -euo pipefail
 
+# Trap to print last executed command and its exit code on error
+trap 'echo "Command failed: $BASH_COMMAND (exit code: $?)"' ERR
+
 USERNAME="$1"
 IMAGE="$2"
 
-# GitHub API requires a token for private images, but public images can be accessed anonymously
-# The repo must be in the format: ghcr.io/<owner>/<image>
-# We'll use the GitHub API to fetch tags
-
 REPO="ghcr.io/$USERNAME/$IMAGE"
 
-# GitHub API: https://api.github.com/v2/packages/container/<image>/versions
-# But for public images, we use the REST API for container packages
-# API: https://ghcr.io/v2/<owner>/<image>/tags/list
+# Fetch tags using a fake token (NOOP)
+TAGS=$(curl -s -H "Authorization: Bearer NOOP" "https://ghcr.io/v2/$USERNAME/$IMAGE/tags/list" | jq -r '.tags[]?')
 
-TAGS=$(curl -s "https://ghcr.io/v2/$USERNAME/$IMAGE/tags/list" | jq -r '.tags[]?')
+# Filter only tags that match semver (e.g., 1.2.3)
+SEMVER_TAGS=$(echo "$TAGS" | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' || true)
 
-# Filter semver tags, sort, and get the latest
-LATEST=$(echo "$TAGS" | sort -V | tail -n1)
+# Sort and get the latest semver tag
+LATEST=$(echo "$SEMVER_TAGS" | sort -V | tail -n1)
 
 if [[ -z "$LATEST" ]]; then
   NEXT="1.0.0"
