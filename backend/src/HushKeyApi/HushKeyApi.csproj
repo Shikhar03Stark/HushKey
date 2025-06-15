@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\HushKeyCore\HushKeyCore.csproj" />
     <ProjectReference Include="..\HushKeyService\HushKeyService.csproj" />
+    <ProjectReference Include="..\HuskKeyInfra\HuskKeyInfra.csproj" />
   </ItemGroup>
 
 </Project>

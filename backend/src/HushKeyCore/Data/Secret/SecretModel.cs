@@ -12,7 +12,7 @@ namespace HushKeyCore.Data.Secret
 
     public enum EncryptionType
     {
-        SYMMETRIC,
+        SYMMETRIC = 1,
         ASYMMETRIC,
     }
 }

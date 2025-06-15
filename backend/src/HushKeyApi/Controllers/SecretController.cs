@@ -57,12 +57,12 @@ namespace HushKeyApi.Controllers
                     _logger.Warning("Secret text is empty or null.");
                     return BadRequest(new { Message = "Secret text cannot be empty." });
                 }
-                var secret = await _secretService.GenerateSymmetricEncryptSecretAsync(secretText);
+                var secret = await _secretService.GenerateSymmetricEncryptSecretAsync(secretText, secretRequest.TTL ?? 86400);
                 var response = new SecretResponse()
                 {
                     UILink = GetShareableLink(ExtractHostFromRequest(HttpContext), secret, true),
                     ServiceShareableLink = GetShareableLink(ExtractHostFromRequest(HttpContext), secret),
-                    ExpiresAt = secretRequest.TTL.HasValue ? DateTime.UtcNow.AddSeconds(secretRequest.TTL.Value) : null
+                    ExpiresAt = secret.ExpiresAt,
                 };
                 _logger.Info($"Symmetric encrypted secret created with ID {secret.EncryptedSecretId}.");
                 return CreatedAtAction(nameof(GetSymmetricEncryptedText), new { secretId = secret.EncryptedSecretId }, response);
