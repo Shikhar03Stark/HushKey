@@ -17,7 +17,6 @@ namespace HushKeyService.Mapper
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.EncryptedSecretId ?? Guid.NewGuid().ToString("N")))
                 .ForMember(dest => dest.EncryptedSecret, opt => opt.MapFrom(src => src.EncryptedSecret ?? string.Empty))
                 .ForMember(dest => dest.EncryptionType, opt => opt.MapFrom(src => src.EncryptionType))
-                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
                 .ForMember(dest => dest.ExpiresAt, opt => opt.MapFrom(src => src.ExpiresAt.HasValue ? src.ExpiresAt.Value : (DateTime?)null));
 
             CreateMap<EncryptedSecretEntity, SecretModel>()

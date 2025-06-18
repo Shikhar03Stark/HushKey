@@ -56,11 +56,11 @@ namespace HuskKeyInfra.Database.Repository.Postgres
             }
         }
 
-        public async Task<EncryptedSecretEntity?> GetByIdAsync(string id)
+        public async Task<EncryptedSecretEntity?> GetByIdAsync(string id, bool includeExpired = false)
         {
             try
             {
-                var (sql, parameters) = GetGetByIdQueryAndParams(id);
+                var (sql, parameters) = GetGetByIdQueryAndParams(id, includeExpired);
                 var result = await _dbConnection.QueryAsync<EncryptedSecretEntity>(sql, parameters);
                 return result.FirstOrDefault();
             }
@@ -74,8 +74,8 @@ namespace HuskKeyInfra.Database.Repository.Postgres
         private static (string, Dictionary<string, object>) GetCreateQueryAndParams(EncryptedSecretEntity entity)
         {
             var sql = @"
-            INSERT INTO ""EncryptedSecrets"" (""Id"", ""EncryptedSecret"", ""EncryptionType"", ""CreatedAt"", ""ExpiresAt"")
-            VALUES (@Id, @EncryptedSecret, @EncryptionType, @CreatedAt, @ExpiresAt)
+            INSERT INTO ""EncryptedSecrets"" (""Id"", ""EncryptedSecret"", ""EncryptionType"", ""CreatedAt"", ""ExpiresAt"", ""BurnAfterRead"")
+            VALUES (@Id, @EncryptedSecret, @EncryptionType, @CreatedAt, @ExpiresAt, @BurnAfterRead)
             ON CONFLICT (""Id"") DO NOTHING;";
 
             var parameters = new Dictionary<string, object>
@@ -84,7 +84,8 @@ namespace HuskKeyInfra.Database.Repository.Postgres
                 { "EncryptedSecret", entity.EncryptedSecret },
                 { "EncryptionType", entity.EncryptionType },
                 { "CreatedAt", entity.CreatedAt },
-                { "ExpiresAt", entity.ExpiresAt ?? (object)DBNull.Value } // Handle nullable ExpiresAt
+                { "ExpiresAt", entity.ExpiresAt ?? (object)DBNull.Value }, // Handle nullable ExpiresAt
+                { "BurnAfterRead", entity.BurnAfterRead } // Include BurnAfterRead parameter
             };
 
             return (sql, parameters);
@@ -102,11 +103,19 @@ namespace HuskKeyInfra.Database.Repository.Postgres
             return (sql, parameters);
         }
 
-        private static (string, Dictionary<string, object>) GetGetByIdQueryAndParams(string id)
+        private static (string, Dictionary<string, object>) GetGetByIdQueryAndParams(string id, bool includeExpired)
         {
             var sql = @"
             SELECT * FROM ""EncryptedSecrets""
             WHERE ""Id"" = @Id;";
+
+            if (!includeExpired)
+            {
+                sql = @"
+                SELECT * FROM ""EncryptedSecrets""
+                WHERE ""Id"" = @Id AND (""ExpiresAt"" IS NULL OR ""ExpiresAt"" > NOW() AT TIME ZONE 'UTC');";
+            }
+
             var parameters = new Dictionary<string, object>
             {
                 { "Id", id }

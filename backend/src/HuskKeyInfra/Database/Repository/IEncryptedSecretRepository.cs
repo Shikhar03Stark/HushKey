@@ -10,7 +10,7 @@ namespace HuskKeyInfra.Database.Repository
     public interface IEncryptedSecretRepository
     {
         public Task CreateAsync(EncryptedSecretEntity encryptedSecretEntity);
-        public Task<EncryptedSecretEntity?> GetByIdAsync(string id);
+        public Task<EncryptedSecretEntity?> GetByIdAsync(string id, bool includeExpired = false);
         public Task DeleteByIdAsync(string id);
     }
 }

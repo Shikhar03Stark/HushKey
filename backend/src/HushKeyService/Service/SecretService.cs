@@ -29,7 +29,7 @@ namespace HushKeyService.Service
             return $"{Convert.ToBase64String(nonce)}.{Convert.ToBase64String(key)}.{Convert.ToBase64String(tag)}";
         }
 
-        public async Task<SecretModel> GenerateSymmetricEncryptSecretAsync(string secretText, int ttlInSeconds = 86400)
+        public async Task<SecretModel> GenerateSymmetricEncryptSecretAsync(string secretText, int ttlInSeconds = 86400, bool burnAfterRead = false)
         {
             var key = RandomNumberGenerator.GetBytes(32); // 256 bits key
             var nonce = RandomNumberGenerator.GetBytes(12); // 96 bits nonce
@@ -40,6 +40,8 @@ namespace HushKeyService.Service
             try
             {
                 var secretModel = EncryptSecretWithAesGcm(secretText, key, nonce, tag, secretId, expirationTime);
+
+                secretModel.BurnAfterRead = burnAfterRead;
 
                 await SaveSecret(secretModel);
                 await SaveStatForSecret(secretModel);
@@ -108,10 +110,18 @@ namespace HushKeyService.Service
                 var entity = await _encryptedSecretRepository.GetByIdAsync(secretId);
                 if (entity == null)
                 {
-                    _logger.Warning($"Secret with ID {secretId} not found in the database.");
+                    _logger.Warning($"Secret with ID {secretId} not found/expired/burned.");
                     return null;
                 }
-                await IncrementAccessCount(secretId);
+                if (entity.BurnAfterRead)
+                {
+                    _logger.Info($"Secret with ID {secretId} is marked for burn after read. Deleting it from the database.");
+                    await _encryptedSecretRepository.DeleteByIdAsync(secretId);
+                }
+                else
+                {
+                    await IncrementAccessCount(secretId);
+                }
                 var secretModel = _mapper.Map<SecretModel>(entity);
                 return secretModel;
             }

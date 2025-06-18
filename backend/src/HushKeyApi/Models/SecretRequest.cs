@@ -9,5 +9,6 @@ namespace HushKeyApi.Data.Secret
         public string SecretText { get; set; }
         [Range(3600, 86400, ErrorMessage = "TTL must be between 3600 seconds (1 hour) and 86400 seconds (24 hours).")] // 1 hour to 24 days in seconds
         public int? TTL { get; set; } // Time to live in seconds, null means no expiration
+        public bool? BurnAfterRead { get; set; } // Optional, if true, the secret will be deleted after first read
     }
 }

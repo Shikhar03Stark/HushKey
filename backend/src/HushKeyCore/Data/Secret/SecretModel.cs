@@ -7,6 +7,7 @@ namespace HushKeyCore.Data.Secret
         public string? EncryptedSecret { get; set; }
         public EncryptionType EncryptionType { get; set; }
         public string Key { get; set; }
+        public bool BurnAfterRead { get; set; } = false;
         public DateTime? ExpiresAt { get; set; } // Nullable DateTime to indicate no expiration if null
     }
 

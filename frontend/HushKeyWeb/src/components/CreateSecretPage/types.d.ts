@@ -3,6 +3,7 @@
 export interface CreateSecretRequest {
   secretText: string;
   ttl?: number; // Time to live in seconds (optional)
+  burnAfterRead?: boolean; // If true, secret will be deleted after first read
 }
 
 export interface CreateSecretResponse {

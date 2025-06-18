@@ -52,6 +52,8 @@ export default function CreateSecretPage() {
 	const [submitted, setSubmitted] = useState(false);
 	const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 	const [shareUrl, setShareUrl] = useState<string | null>(null);
+	const [burnAfterRead, setBurnAfterRead] = useState(false);
+	const [showBurnInfo, setShowBurnInfo] = useState(false);
 
 	const MIN_TTL = 3600; // 1 hour in seconds
 	const MAX_TTL = 86400; // 24 hours in seconds
@@ -81,6 +83,7 @@ export default function CreateSecretPage() {
 		const requestBody: CreateSecretRequest = {
 			secretText: secret,
 			ttl: ttl,
+			burnAfterRead: burnAfterRead,
 		};
 		try {
 			const endpoint = API_ENDPOINTS.createSecret();
@@ -105,15 +108,15 @@ export default function CreateSecretPage() {
 	};
 
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-gray-950">
+		<div className="min-h-screen flex items-center justify-center bg-gray-950 px-2">
 			{shareUrl !== null && <SharePopup url={shareUrl} onClose={() => setShareUrl(null)} />}
 			{toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
-			<div className="bg-gray-900 shadow-2xl rounded-lg p-8 w-full max-w-md border border-gray-800">
-				<h1 className="text-2xl font-bold mb-6 text-center text-blue-300">Create a Secret</h1>
+			<div className="bg-gray-900 shadow-2xl rounded-lg p-4 sm:p-8 w-full max-w-md border border-gray-800 mx-auto">
+				<h1 className="text-2xl font-bold mb-4 sm:mb-6 text-center text-blue-300">Create a Secret</h1>
 				<form onSubmit={handleSubmit} className="space-y-4">
 					<label className="block text-gray-300 font-medium">Secret</label>
 					<textarea
-						className="w-full p-3 border border-gray-800 bg-gray-800 text-blue-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none min-h-[100px] placeholder:text-gray-500"
+						className="w-full p-3 border border-gray-800 bg-gray-800 text-blue-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none min-h-[100px] placeholder:text-gray-500 text-sm sm:text-base"
 						value={secret}
 						onChange={e => {
 							if (e.target.value.length <= MAX_SECRET_LENGTH) setSecret(e.target.value);
@@ -125,7 +128,7 @@ export default function CreateSecretPage() {
 					<div className="text-right text-xs text-gray-400">
 						{secret.length} / {MAX_SECRET_LENGTH} characters
 					</div>
-					<label className="block text-gray-300 font-medium mt-4">Time to Live (TTL)</label>
+					<label className="block text-gray-300 font-medium mt-2 sm:mt-4">Time to Live (TTL)</label>
 					<input
 						type="range"
 						min={MIN_TTL}
@@ -138,15 +141,44 @@ export default function CreateSecretPage() {
 					<div className="text-xs text-gray-400 text-right mb-2">
 						{Math.floor(ttl / 3600)} hour{Math.floor(ttl / 3600) > 1 ? 's' : ''}
 					</div>
+					<div className="flex items-center mt-2 sm:mt-4 relative">
+						<input
+							type="checkbox"
+							id="burnAfterRead"
+							checked={burnAfterRead}
+							onChange={e => setBurnAfterRead(e.target.checked)}
+							className="mr-2 accent-blue-700"
+						/>
+						<label htmlFor="burnAfterRead" className="text-gray-300 font-medium cursor-pointer text-sm sm:text-base flex items-center">
+							Burn After Read
+							<button
+								type="button"
+								className="ml-1 text-xs text-gray-400 focus:outline-none"
+								aria-label="Info about burn after read"
+								onClick={e => {
+									e.stopPropagation();
+									setShowBurnInfo((v) => !v);
+								}}
+								onBlur={() => setShowBurnInfo(false)}
+							>
+								🛈
+							</button>
+						</label>
+						{showBurnInfo && (
+							<div className="absolute left-0 top-full mt-1 w-64 bg-gray-900 border border-gray-700 rounded shadow-lg p-2 text-xs text-blue-100 z-20">
+								If enabled, the secret can only be viewed once. After it is accessed, it will be permanently deleted.
+							</div>
+						)}
+					</div>
 					<button
 						type="submit"
-						className="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+						className="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-base sm:text-lg"
 					>
 						Save Secret
 					</button>
 				</form>
 				{submitted && (
-					<div className="mt-4 text-green-400 text-center font-medium">Secret submitted!</div>
+					<div className="mt-4 text-green-400 text-center font-medium text-sm sm:text-base">Secret submitted!</div>
 				)}
 			</div>
 		</div>

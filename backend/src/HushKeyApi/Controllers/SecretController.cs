@@ -34,7 +34,7 @@ namespace HushKeyApi.Controllers
                 if (secret == null)
                 {
                     _logger.Warning($"Secret with ID {secretId} not found.");
-                    return NotFound(new { Message = "Secret not found." });
+                    return NotFound(new { Message = "Secret not found/expired/burned." });
                 }
                 return Ok(secret);
             }
@@ -57,7 +57,7 @@ namespace HushKeyApi.Controllers
                     _logger.Warning("Secret text is empty or null.");
                     return BadRequest(new { Message = "Secret text cannot be empty." });
                 }
-                var secret = await _secretService.GenerateSymmetricEncryptSecretAsync(secretText, secretRequest.TTL ?? 86400);
+                var secret = await _secretService.GenerateSymmetricEncryptSecretAsync(secretText, secretRequest.TTL ?? 86400, secretRequest.BurnAfterRead ?? false);
                 var response = new SecretResponse()
                 {
                     UILink = GetShareableLink(ExtractHostFromRequest(HttpContext), secret, true),
