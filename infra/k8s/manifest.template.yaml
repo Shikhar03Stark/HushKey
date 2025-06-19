@@ -32,7 +32,7 @@ spec:
       data:
         - objectName: "POSTGRES-USER"
           key: POSTGRES_USER
-        - objectName: "POSTGRES-PASS"
+        - objectName: "POSTGRES-PASSWORD"
           key: POSTGRES_PASSWORD
         - objectName: "POSTGRES-HOST"
           key: POSTGRES_HOST
@@ -68,7 +68,7 @@ spec:
               secretProviderClass: "hushkey-kv"
       containers:
         - name: hushkey-api
-          image: ghcr.io/shilhar03stark/hushkeyapi:__IMAGE_TAG__
+          image: ghcr.io/shikhar03stark/hushkeyapi:__IMAGE_TAG__
           ports:
             - containerPort: 5000
           env:
