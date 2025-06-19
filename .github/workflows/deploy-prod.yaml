@@ -1,0 +1,43 @@
+name: Deploy to AKS (Production)
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  AZURE_SUBSCRIPTION_ID: ${{ secrets.AZ_SUBSCRIPTIONID }}
+  AZURE_CLIENT_ID: ${{ secrets.AZ_SP_CLIENTID }}
+  AZURE_TENANT_ID: ${{ secrets.AZ_TENANTID }}
+  AZURE_CLIENT_SECRET: ${{ secrets.AZ_SP_CLIENTSECRET }}
+  AKS_RESOURCE_GROUP: ${{ secrets.AZ_RG }}
+  AKS_CLUSTER_NAME: ${{ secrets.AZ_AKS_CLUSTERNAME }}
+
+jobs:
+  deploy:
+    name: Deploy to AKS
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Azure CLI
+        uses: azure/login@v2
+        with:
+          client-id: ${{ env.AZURE_CLIENT_ID }}
+          tenant-id: ${{ env.AZURE_TENANT_ID }}
+          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
+          client-secret: ${{ env.AZURE_CLIENT_SECRET }}
+
+      - name: Get AKS credentials
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: ${{ env.AKS_RESOURCE_GROUP }}
+          cluster-name: ${{ env.AKS_CLUSTER_NAME }}
+
+      - name: Set execute permission for deploy.sh
+        run: chmod +x ./scripts/deploy.sh
+
+      - name: Deploy to AKS
+        run: ./scripts/deploy.sh ${{ env.AZURE_TENANT_ID }}
