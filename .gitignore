@@ -55,3 +55,5 @@ nunit-*.xml
 
 .vs/
 .vscode/
+
+infra/k8s/deploy.yaml
