@@ -5,6 +5,7 @@
 set -euo pipefail
 
 TENANTID=$1
+UAMI_CLIENTID=$2
 
 MANIFEST="infra/k8s/manifest.template.yaml"
 OUTPUT="infra/k8s/deploy.yaml"
@@ -16,7 +17,7 @@ if [[ -z "$TAG" ]]; then
 fi
 
 # Substitute __IMAGE_TAG__ and __TENANTID__ with the latest tag and provided tenant id
-sed "s|__IMAGE_TAG__|$TAG|g; s|__TENANTID__|$TENANTID|g" "$MANIFEST" > "$MANIFEST.tmp" && mv "$MANIFEST.tmp" "$OUTPUT"
+sed "s|__IMAGE_TAG__|$TAG|g; s|__TENANTID__|$TENANTID|g; s|__UAMI_CLIENTID__|$UAMI_CLIENTID|g" "$MANIFEST" > "$MANIFEST.tmp" && mv "$MANIFEST.tmp" "$OUTPUT"
 echo "Updated $MANIFEST with image tag: $TAG and tenant id: $TENANTID"
 
 kubectl apply -f ./infra/k8s/deploy.yaml
