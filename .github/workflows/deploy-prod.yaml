@@ -34,7 +34,7 @@ jobs:
           cluster-name: ${{ env.AKS_CLUSTER_NAME }}
 
       - name: Set execute permission for deploy.sh
-        run: chmod +x ./scripts/deploy.sh
+        run: chmod +x ./scripts/*
 
       - name: Deploy to AKS
         run: ./scripts/deploy.sh ${{ env.AZURE_TENANT_ID }}
