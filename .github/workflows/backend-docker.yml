@@ -43,5 +43,6 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: |
             ghcr.io/${{ steps.actor_lower.outputs.actor_lower }}/hushkeyapi:${{ steps.next_version.outputs.version }}
