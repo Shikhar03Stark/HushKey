@@ -15,7 +15,7 @@ spec:
           objectName: "POSTGRES-USER"
           objectType: "secret"
         - |
-          objectName: "POSTGRES-PASS"
+          objectName: "POSTGRES-PASSWORD"
           objectType: "secret"
         - |
           objectName: "POSTGRES-HOST"
