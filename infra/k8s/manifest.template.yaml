@@ -151,3 +151,5 @@ kind: ServiceAccount
 metadata:
   name: hushkeykv-sa
   namespace: hushkey-ns
+  annotations:
+    azure.workload.identity/client-id: "__UAMI_CLIENTID__"
