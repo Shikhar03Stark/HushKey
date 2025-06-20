@@ -10,6 +10,7 @@ on:
 jobs:
   build-and-publish:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    environment: prod
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -29,13 +30,9 @@ jobs:
         id: next_version
         run: |
           chmod +x ./scripts/next-docker-version.sh
-          VERSION=$(./scripts/next-docker-version.sh ${{ github.actor }} hushkeyapi)
+          VERSION=$(./scripts/next-docker-version.sh shikhar03stark hushkeyapi)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Creating tag with semver $VERSION"
-
-      - name: Set lowercase GitHub actor
-        id: actor_lower
-        run: echo "actor_lower=$(echo '${{ github.actor }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -45,4 +42,4 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            ghcr.io/${{ steps.actor_lower.outputs.actor_lower }}/hushkeyapi:${{ steps.next_version.outputs.version }}
+            ghcr.io/shikhar03stark/hushkeyapi:${{ steps.next_version.outputs.version }}
