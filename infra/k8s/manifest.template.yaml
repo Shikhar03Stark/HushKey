@@ -129,14 +129,14 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: hushkey-api
+  name: hushkey-nginx
   namespace: hushkey-ns
   annotations:
     kubernetes.io/ingress.class: nginx
     kubernetes.io/ingress.global-static-ip-name: "hushkey-public-ip"
 spec:
   rules:
-    - host: hushkey.devitvish.in
+    - host: hushkeyapi.devitvish.in
       http:
         paths:
           - path: /api
