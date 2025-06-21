@@ -71,7 +71,7 @@ spec:
         - name: hushkey-api
           image: ghcr.io/shikhar03stark/hushkeyapi:__IMAGE_TAG__
           ports:
-            - containerPort: 5000
+            - containerPort: 8080
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: "Production"
@@ -124,7 +124,7 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 5000
+      targetPort: 8080
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
