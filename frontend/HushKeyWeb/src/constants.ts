@@ -23,7 +23,6 @@ export interface NavigationItem {
 import App from './components/HomePage/App';
 import CreateSecretPage from './components/CreateSecretPage/CreateSecretPage';
 import ViewSecretPage from './components/ViewSecretPage/ViewSecretPage';
-import { loadEnv } from 'vite';
 
 export const NAVIGATION: NavigationItem[] = [
   {
