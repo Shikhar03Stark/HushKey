@@ -117,7 +117,7 @@ kind: Service
 metadata:
   name: hushkey-api
   namespace: hushkey-ns
-  annotation:
+  annotations:
     service.beta.kubernetes.io/azure-pip-name: "hushkey-public-ip"
     service.beta.kubernetes.io/azure-load-balancer-resource-group: "hushkey-prod-rg"
 spec:
