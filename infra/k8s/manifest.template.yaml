@@ -75,27 +75,27 @@ spec:
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: "Production"
-            - name: POSTGRES_HOST
+            - name: DB_HOST
               valueFrom:
                 secretKeyRef:
                   name: db-secret
                   key: POSTGRES_HOST
-            - name: POSTGRES_PORT
+            - name: DB_PORT
               valueFrom:
                 secretKeyRef:
                   name: db-secret
                   key: POSTGRES_PORT
-            - name: POSTGRES_DB
+            - name: DB_NAME
               valueFrom:
                 secretKeyRef:
                   name: db-secret
                   key: POSTGRES_DB
-            - name: POSTGRES_USER
+            - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: db-secret
                   key: POSTGRES_USER
-            - name: POSTGRES_PASSWORD
+            - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: db-secret
