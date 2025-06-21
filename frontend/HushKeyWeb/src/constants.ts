@@ -1,7 +1,9 @@
 // src/constants.ts
 // Centralized API endpoint constants for HushKey frontend
 
-export const API_BASE_URL = "https://localhost:5001/api";
+// Use NODE_ENV to determine if in development mode
+const isDev = process.env.NODE_ENV === "development";
+export const API_BASE_URL = isDev ? "https://localhost:5001/api" : "http://hushkeyapi.devitvish.in/api";
 
 export const MAX_SECRET_LENGTH = 512;
 
@@ -21,6 +23,7 @@ export interface NavigationItem {
 import App from './components/HomePage/App';
 import CreateSecretPage from './components/CreateSecretPage/CreateSecretPage';
 import ViewSecretPage from './components/ViewSecretPage/ViewSecretPage';
+import { loadEnv } from 'vite';
 
 export const NAVIGATION: NavigationItem[] = [
   {
