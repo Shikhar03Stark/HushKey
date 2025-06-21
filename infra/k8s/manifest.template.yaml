@@ -6,6 +6,7 @@ metadata:
 spec:
   provider: azure
   parameters:
+    usePodIdentity: "false"
     clientID: "__UAMI_CLIENTID__"
     keyvaultName: hushkey-kv
     tenantId: __TENANTID__
@@ -13,19 +14,19 @@ spec:
       array:
         - |
           objectName: "POSTGRES-USER"
-          objectType: "secret"
+          objectType: secret
         - |
           objectName: "POSTGRES-PASSWORD"
-          objectType: "secret"
+          objectType: secret
         - |
           objectName: "POSTGRES-HOST"
-          objectType: "secret"
+          objectType: secret
         - |
           objectName: "POSTGRES-PORT"
-          objectType: "secret"
+          objectType: secret
         - |
           objectName: "POSTGRES-DB"
-          objectType: "secret"
+          objectType: secret
   secretObjects:
     - secretName: db-secret
       type: Opaque
@@ -78,27 +79,27 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: db-secret
-                  key: POSTGRES-HOST
+                  key: POSTGRES_HOST
             - name: POSTGRES_PORT
               valueFrom:
                 secretKeyRef:
                   name: db-secret
-                  key: POSTGRES-PORT
+                  key: POSTGRES_PORT
             - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:
                   name: db-secret
-                  key: POSTGRES-DB
+                  key: POSTGRES_DB
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
                   name: db-secret
-                  key: POSTGRES-USER
+                  key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: db-secret
-                  key: POSTGRES-PASSWORD
+                  key: POSTGRES_PASSWORD
           volumeMounts:
             - name: secrets-store-inline
               mountPath: "/mnt/secrets-store"
