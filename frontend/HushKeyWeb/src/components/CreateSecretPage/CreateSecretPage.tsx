@@ -65,16 +65,16 @@ export default function CreateSecretPage() {
 
 	const ensureUIDomain = (url: string): string => {
 		const urlObj = new URL(url);
-		if(urlObj.hostname !== window.location.hostname){
-			const msg = "UI Host does not match uiLink Host"
-			console.error(msg);
-			throw Error(msg);
-		}
 		if (urlObj.hostname === "localhost" && urlObj.port !== window.location.port){
 			// set to ui port for development scenario
 			urlObj.port = window.location.port;
             urlObj.protocol = window.location.protocol;
 		}
+        else {
+            urlObj.protocol = window.location.protocol;
+            urlObj.hostname = window.location.hostname;
+            urlObj.port = window.location.port
+        }
 		return urlObj.toString();
 	}
 
