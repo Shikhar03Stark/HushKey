@@ -119,7 +119,7 @@ metadata:
   namespace: hushkey-ns
 spec:
   type: LoadBalancer
-  loadBalancerIP: 135.235.150.57
+  loadBalancerIP: 135.235.144.134
   selector:
     app: hushkey-api
   ports:
