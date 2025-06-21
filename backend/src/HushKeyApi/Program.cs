@@ -41,6 +41,15 @@ public class Program
             });
             app.MapOpenApi();
         }
+        else
+        {
+            app.UseCors(builder =>
+            {
+                builder.WithOrigins(["https://hushkey.devitvish.in"])
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+        }
 
         app.UseHttpsRedirection();
 

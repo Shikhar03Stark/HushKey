@@ -2,7 +2,7 @@
 // Centralized API endpoint constants for HushKey frontend
 
 // Use NODE_ENV to determine if in development mode
-const isDev = process.env.NODE_ENV === "development";
+const isDev =   import.meta.env.DEV;
 export const API_BASE_URL = isDev ? "https://localhost:5001/api" : "http://hushkeyapi.devitvish.in/api";
 
 export const MAX_SECRET_LENGTH = 512;
