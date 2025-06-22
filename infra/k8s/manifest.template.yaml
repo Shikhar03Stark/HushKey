@@ -118,8 +118,7 @@ metadata:
   name: hushkey-api
   namespace: hushkey-ns
 spec:
-  type: LoadBalancer
-  loadBalancerIP: 135.235.144.134
+  type: ClusterIP
   selector:
     app: hushkey-api
   ports:
