@@ -3,7 +3,7 @@
 
 // Use NODE_ENV to determine if in development mode
 const isDev =   import.meta.env.DEV;
-export const API_BASE_URL = isDev ? "https://localhost:5001/api" : "http://hushkeyapi.devitvish.in/api";
+export const API_BASE_URL = isDev ? "https://localhost:5001/api" : "https://hushkeyapi.devitvish.in/api";
 
 export const MAX_SECRET_LENGTH = 512;
 
