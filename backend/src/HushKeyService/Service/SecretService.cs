@@ -82,7 +82,7 @@ namespace HushKeyService.Service
         {
             _logger.Info($"Generating encrypted secret of length {secretText.Length}");
             using var aes = new AesGcm(key, tag.Length);
-            var encryptedSecret = new byte[secretText.Length];
+            var encryptedSecret = new byte[Encoding.UTF8.GetBytes(secretText).Length];
 
             aes.Encrypt(nonce, Encoding.UTF8.GetBytes(secretText), encryptedSecret, tag);
 
